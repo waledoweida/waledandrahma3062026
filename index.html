@@ -74,19 +74,52 @@ html, body {
   z-index: 0;
 }
 
-/* ══ HERO WRAP (curtains + chandelier) ══ */
+/* ══ HERO WRAP (curtains + chandelier + video) ══ */
 .hero-wrap {
   position: relative;
   width: 100%;
   z-index: 2;
 }
 
-/* ══ CURTAIN SVG ══ */
+/* ══ VIDEO — absolute background inside hero-wrap ══ */
+.hero-video-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+  line-height: 0;
+}
+.hero-video-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  overflow: hidden;
+}
+.hero-video-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(20,12,4,.25) 100%);
+  pointer-events: none;
+}
+
+/* ══ CURTAIN SVG — شفاف فوق الفيديو ══ */
 .curtain-wrap {
   position: relative;
   width: 100%;
   pointer-events: none;
   line-height: 0;
+  z-index: 1;
+  opacity: 0.72;
+  mix-blend-mode: multiply;
 }
 .curtain-wrap svg {
   width: 100%;
@@ -112,9 +145,8 @@ html, body {
 
 /* ══ CONTENT ══ */
 .content {
-  position: relative;
-  z-index: 4;
-  padding: clamp(10px, 3vw, 20px) clamp(18px, 5vw, 32px) clamp(24px, 6vw, 40px);
+  position: relative; z-index: 4;
+  padding: 0 clamp(18px, 5vw, 32px) clamp(24px, 6vw, 40px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -283,6 +315,35 @@ html, body {
   margin-bottom: 4px;
 }
 .map-btn:hover { opacity: .88; transform: translateY(-1px); }
+
+/* ══ HERO VIDEO ══ */
+.hero-video-wrap {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+  line-height: 0;
+}
+.hero-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 6px 28px rgba(122,92,16,.4);
+}
+.hero-video-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(44,32,16,.35) 100%);
+  pointer-events: none;
+}
 
 /* sparkle corners */
 .sparkle {
@@ -583,8 +644,9 @@ html, body {
 /* ══ FLOATING MUSIC BUTTON ══ */
 #musicBtn {
   position: fixed;
-  bottom: 22px;
-  right: 18px;
+  bottom: auto;
+  top: 16px;
+  right: 16px;
   z-index: 8000;
   width: 44px;
   height: 44px;
@@ -677,9 +739,18 @@ html, body {
 
   <!-- DAMASK already done via ::before -->
 
-  <!-- HERO: curtains + chandelier together -->
+  <!-- HERO: فيديو + ستائر + ثريا مدمجين -->
   <div class="hero-wrap">
-  <!-- CURTAINS SVG -->
+
+  <!-- الفيديو في الخلف -->
+  <div class="hero-video-wrap">
+    <div class="hero-video-frame">
+      <video id="heroVideo" src="hero.mp4" autoplay muted loop playsinline preload="auto"></video>
+      <div class="hero-video-overlay"></div>
+    </div>
+  </div>
+
+  <!-- CURTAINS SVG فوق الفيديو -->
   <div class="curtain-wrap" aria-hidden="true">
     <svg viewBox="0 0 480 320" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg">
       <defs>
