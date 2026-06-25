@@ -74,28 +74,27 @@ html, body {
   z-index: 0;
 }
 
-/* ══ HERO WRAP (curtains + chandelier + video) ══ */
+/* ══ HERO WRAP (curtains + chandelier + صورة/فيديو) ══ */
 .hero-wrap {
   position: relative;
   width: 100%;
   z-index: 2;
 }
 
-/* ══ VIDEO — absolute background inside hero-wrap ══ */
+/* الصورة/الفيديو يأخد مساحته الطبيعية */
 .hero-video-wrap {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  width: 100%;
   margin: 0;
   padding: 0;
   display: block;
   line-height: 0;
+  position: relative;
+  z-index: 0;
 }
 .hero-video-frame {
   position: relative;
   width: 100%;
-  height: 100%;
-  border-radius: 0;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
 }
 .hero-video-frame video,
@@ -112,9 +111,11 @@ html, body {
   pointer-events: none;
 }
 
-/* ══ CURTAIN SVG — شفاف فوق الفيديو ══ */
+/* الستائر absolute فوق الصورة */
+/* ══ CURTAIN SVG — شفاف فوق الصورة ══ */
 .curtain-wrap {
-  position: relative;
+  position: absolute;
+  top: 0; left: 0; right: 0;
   width: 100%;
   pointer-events: none;
   line-height: 0;
@@ -316,36 +317,6 @@ html, body {
   margin-bottom: 4px;
 }
 .map-btn:hover { opacity: .88; transform: translateY(-1px); }
-
-/* ══ HERO VIDEO ══ */
-.hero-video-wrap {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  display: block;
-  line-height: 0;
-}
-.hero-video-frame {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  border-radius: 0;
-  overflow: hidden;
-  box-shadow: 0 6px 28px rgba(122,92,16,.4);
-}
-.hero-video-frame video,
-.hero-video-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.hero-video-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(44,32,16,.35) 100%);
-  pointer-events: none;
-}
 
 /* sparkle corners */
 .sparkle {
@@ -646,9 +617,9 @@ html, body {
 /* ══ FLOATING MUSIC BUTTON ══ */
 #musicBtn {
   position: fixed;
-  bottom: auto;
-  top: 16px;
-  right: 16px;
+  bottom: 22px;
+  top: auto;
+  right: 18px;
   z-index: 8000;
   width: 44px;
   height: 44px;
