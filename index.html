@@ -580,6 +580,31 @@ html, body {
   transition: opacity .5s;
 }
 .env-tap-text.visible { opacity: 1; }
+/* ══ FLOATING MUSIC BUTTON ══ */
+#musicBtn {
+  position: fixed;
+  bottom: 22px;
+  right: 18px;
+  z-index: 8000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold-dark));
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 14px rgba(122,92,16,.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: transform .18s, box-shadow .18s;
+  -webkit-tap-highlight-color: transparent;
+}
+#musicBtn:hover { transform: scale(1.1); box-shadow: 0 5px 20px rgba(122,92,16,.7); }
+#musicBtn svg { width: 20px; height: 20px; fill: #fff8e0; }
+#musicBtn.muted svg.icon-play  { display: block; }
+#musicBtn.muted svg.icon-pause { display: none;  }
+#musicBtn:not(.muted) svg.icon-play  { display: none;  }
+#musicBtn:not(.muted) svg.icon-pause { display: block; }
 </style>
 </head>
 <body>
@@ -881,7 +906,7 @@ html, body {
       لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
     </p>
 
-    <p class="subtitle fi d2">تتشرف بدعوتكم &nbsp;|&nbsp; عقد قراني</p>
+    <p class="subtitle fi d2">ونتشرف بدعوتكم &nbsp;|&nbsp; عقد قراني</p>
 
     <div class="names fi d3">وليد &amp; رحمة</div>
 
@@ -1168,21 +1193,42 @@ function startIntroCountdown() {
 ══════════════════════ */
 function startBackgroundMusic() {
   const audio = document.getElementById('bgMusic');
+  const btn   = document.getElementById('musicBtn');
   if (!audio) return;
-  audio.volume = 0;
-  audio.play().then(() => {
-    // Fade in volume gradually
+
+  function showBtn() {
+    btn.style.display = 'flex';
+  }
+
+  function fadeIn() {
     let vol = 0;
-    const fadeIn = setInterval(() => {
+    audio.volume = 0;
+    const iv = setInterval(() => {
       vol = Math.min(vol + 0.04, 0.75);
       audio.volume = vol;
-      if (vol >= 0.75) clearInterval(fadeIn);
+      if (vol >= 0.75) clearInterval(iv);
     }, 120);
+  }
+
+  audio.play().then(() => {
+    fadeIn();
+    showBtn();
   }).catch(() => {
-    // Autoplay blocked — try on first user interaction
+    // Autoplay blocked — play on first tap
     document.addEventListener('click', () => {
-      audio.play().catch(() => {});
+      audio.play().then(() => { fadeIn(); showBtn(); }).catch(() => {});
     }, { once: true });
+  });
+
+  // Toggle mute/play
+  btn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play().catch(() => {});
+      btn.classList.remove('muted');
+    } else {
+      audio.pause();
+      btn.classList.add('muted');
+    }
   });
 }
 
@@ -1204,6 +1250,18 @@ function tick2() {
 }
 tick2(); setInterval(tick2, 1000);
 </script>
+<!-- Floating music toggle -->
+<button id="musicBtn" aria-label="كتم/تشغيل الموسيقى">
+  <!-- Play icon (shown when muted) -->
+  <svg class="icon-play" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 5v14l11-7z"/>
+  </svg>
+  <!-- Pause icon (shown when playing) -->
+  <svg class="icon-pause" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+  </svg>
+</button>
+
 <!-- Background music -->
 <audio id="bgMusic" src="song.mp3" loop preload="auto" style="display:none"></audio>
 
