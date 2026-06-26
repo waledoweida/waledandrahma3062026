@@ -19,19 +19,22 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --cream:      #f5ead6;
-  --cream2:     #ede0c4;
-  --cream3:     #e8d5b0;
-  --gold:       #b8892a;
-  --gold-light: #d4af5a;
-  --gold-bright:#e8c870;
-  --gold-dark:  #7a5c10;
-  --gold-shine: #f0d878;
-  --curtain:    #e8d4b0;
-  --curtain2:   #d4bc90;
-  --curtain3:   #c0a070;
-  --text:       #2c2010;
-  --muted:      #6b5030;
+  --cream:       #f8edda;
+  --cream2:      #ede0c4;
+  --cream3:      #e8d5b0;
+  --gold:        #c49a2e;
+  --gold-light:  #dbb85e;
+  --gold-bright: #f0d06a;
+  --gold-dark:   #7a5c10;
+  --gold-deep:   #4a3508;
+  --gold-shine:  #fae888;
+  --curtain:     #e8d4b0;
+  --curtain2:    #d4bc90;
+  --curtain3:    #c0a070;
+  --text:        #1a1005;
+  --muted:       #6b5030;
+  --gold-grd:    linear-gradient(135deg,#fae888 0%,#f0d06a 20%,#c49a2e 42%,#7a5c10 58%,#c49a2e 78%,#fae888 100%);
+  --sh-gold:     0 8px 36px rgba(122,92,16,.30),0 2px 8px rgba(122,92,16,.18);
 }
 
 html, body {
@@ -59,7 +62,7 @@ html, body {
   max-width: 480px;
   background: var(--cream);
   overflow: hidden;
-  /* allow natural scroll on mobile */
+  box-shadow: 0 0 0 1px rgba(196,154,46,.20), 0 32px 100px rgba(10,6,2,.60);
 }
 
 /* ══ DAMASK BACKGROUND PATTERN ══ */
@@ -67,7 +70,7 @@ html, body {
   content: '';
   position: absolute;
   inset: 0;
-  opacity: 0.13;
+  opacity: 0.09;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23b8892a'%3E%3Cellipse cx='60' cy='60' rx='14' ry='22'/%3E%3Cellipse cx='60' cy='60' rx='22' ry='14'/%3E%3Ccircle cx='60' cy='60' r='7'/%3E%3Cellipse cx='60' cy='30' rx='6' ry='14'/%3E%3Cellipse cx='60' cy='90' rx='6' ry='14'/%3E%3Cellipse cx='30' cy='60' rx='14' ry='6'/%3E%3Cellipse cx='90' cy='60' rx='14' ry='6'/%3E%3Ccircle cx='60' cy='16' r='5'/%3E%3Ccircle cx='60' cy='104' r='5'/%3E%3Ccircle cx='16' cy='60' r='5'/%3E%3Ccircle cx='104' cy='60' r='5'/%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3Ccircle cx='90' cy='30' r='3'/%3E%3Ccircle cx='30' cy='90' r='3'/%3E%3Ccircle cx='90' cy='90' r='3'/%3E%3Cellipse cx='60' cy='44' rx='4' ry='8'/%3E%3Cellipse cx='60' cy='76' rx='4' ry='8'/%3E%3Cellipse cx='44' cy='60' rx='8' ry='4'/%3E%3Cellipse cx='76' cy='60' rx='8' ry='4'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 120px 120px;
   pointer-events: none;
@@ -113,6 +116,41 @@ html, body {
   height: 100%;
   object-fit: cover;
   display: block;
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+  -webkit-touch-callout: none;
+}
+
+/* Protection overlay — intercepts all pointer events on the image */
+.img-protect-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Invisible watermark layer */
+.img-watermark {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.06;
+  transform: rotate(-35deg);
+  font-family: 'Scheherazade New', serif;
+  font-size: clamp(1.4rem, 6vw, 2rem);
+  color: #7a5c10;
+  letter-spacing: .1em;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,.3);
+  user-select: none;
 }
 .hero-video-overlay {
   position: absolute;
@@ -152,13 +190,13 @@ html, body {
 .chandelier-wrap svg {
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 4px 18px rgba(184,137,42,0.35));
+  filter: drop-shadow(0 6px 28px rgba(196,154,46,.55)) drop-shadow(0 2px 6px rgba(122,92,16,.30));
 }
 
 /* ══ CONTENT ══ */
 .content {
   position: relative; z-index: 4;
-  padding: 0 clamp(18px, 5vw, 32px) clamp(24px, 6vw, 40px);
+  padding: 0 clamp(22px, 6vw, 36px) clamp(32px, 8vw, 52px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -183,105 +221,141 @@ html, body {
 
 .bismillah {
   font-family: 'Scheherazade New', serif;
-  font-size: clamp(1rem, 4.5vw, 1.2rem);
+  font-size: clamp(1.05rem, 4.5vw, 1.3rem);
   color: var(--gold-dark);
   text-align: center;
-  margin-bottom: clamp(6px,1.5vw,12px);
-  letter-spacing: .03em;
+  margin-top: clamp(18px,4vw,28px);
+  margin-bottom: clamp(14px,3vw,22px);
+  letter-spacing: .06em;
+  text-shadow: 0 1px 6px rgba(122,92,16,.18);
 }
 
 .verse {
   font-family: 'Scheherazade New', serif;
-  font-size: clamp(1rem, 4vw, 1.18rem);
+  font-size: clamp(1rem, 4.2vw, 1.22rem);
   color: var(--text);
   text-align: center;
-  line-height: 1.9;
-  padding: clamp(8px,2vw,14px) clamp(8px,2.5vw,16px);
-  border-top: 1px solid rgba(184,137,42,.35);
-  border-bottom: 1px solid rgba(184,137,42,.35);
-  margin-bottom: clamp(8px,2vw,14px);
+  line-height: 2.1;
+  padding: clamp(14px,3.5vw,22px) clamp(14px,4vw,24px);
+  border-top: 1px solid rgba(196,154,46,.40);
+  border-bottom: 1px solid rgba(196,154,46,.40);
+  margin-bottom: clamp(16px,4vw,26px);
+  background: rgba(255,255,255,.28);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(196,154,46,.10);
 }
 
 .subtitle {
-  font-size: clamp(.9rem, 3.8vw, 1.05rem);
+  font-size: clamp(.88rem, 3.6vw, 1rem);
   color: var(--muted);
   text-align: center;
-  margin-bottom: clamp(6px,1.5vw,12px);
-  letter-spacing: .04em;
+  margin-bottom: clamp(8px,2vw,16px);
+  letter-spacing: .12em;
+  text-transform: none;
+  font-variant: small-caps;
+  opacity: .85;
 }
 
 /* ══ BIG NAMES (calligraphic gold) ══ */
 .names {
   font-family: 'Scheherazade New', serif;
-  font-size: clamp(2.6rem, 13vw, 4.2rem);
+  font-size: clamp(2.8rem, 14vw, 4.6rem);
   font-weight: 700;
   text-align: center;
-  line-height: 1.1;
-  background: linear-gradient(160deg, var(--gold-shine) 0%, var(--gold-bright) 25%, var(--gold) 50%, var(--gold-dark) 70%, var(--gold-bright) 88%, var(--gold-shine) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 2px 6px rgba(122,92,16,.4));
-  margin-bottom: clamp(6px,1.5vw,12px);
+  line-height: 1.15;
+  color: #c49a2e;
+  margin-bottom: clamp(10px,2.5vw,18px);
+  margin-top: clamp(4px,1vw,8px);
   padding: 0 4px;
+  text-shadow:
+    0 1px 0 #fae888,
+    0 2px 8px rgba(122,92,16,.40),
+    0 4px 20px rgba(122,92,16,.20);
 }
 
 .dua {
-  font-size: clamp(.88rem, 3.5vw, 1rem);
+  font-family: 'Scheherazade New', serif;
+  font-size: clamp(.92rem, 3.8vw, 1.08rem);
   color: var(--muted);
   text-align: center;
-  line-height: 1.7;
-  margin-bottom: clamp(8px,2vw,14px);
+  line-height: 1.85;
+  margin-bottom: clamp(14px,3.5vw,22px);
+  font-style: italic;
+  opacity: .80;
 }
 
 /* divider */
 .divider {
-  display: flex; align-items: center; gap: 10px;
-  width: 80%; margin: clamp(2px,.5vw,6px) auto clamp(8px,2vw,14px);
+  display: flex; align-items: center; gap: 12px;
+  width: 88%; margin: clamp(10px,2.5vw,18px) auto clamp(14px,3.5vw,22px);
 }
 .divider::before, .divider::after {
   content: ''; flex: 1; height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+  background: linear-gradient(to right, transparent, var(--gold-light) 40%, var(--gold-shine) 60%, transparent);
+  box-shadow: 0 0 6px rgba(196,154,46,.20);
 }
-.divider-icon { color: var(--gold); font-size: 1rem; flex-shrink: 0; }
+.divider-icon { color: var(--gold-bright); font-size: 1.1rem; flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(240,208,106,.5)); }
 
-/* Date */
 .date-block {
-  font-size: clamp(.9rem,3.8vw,1.05rem);
+  font-size: clamp(.92rem,3.8vw,1.08rem);
   color: var(--text);
   text-align: center;
-  line-height: 1.9;
-  margin-bottom: clamp(8px,2vw,14px);
+  line-height: 2.0;
+  margin-bottom: clamp(14px,3.5vw,22px);
+  padding: clamp(12px,3vw,18px) clamp(16px,4vw,28px);
+  background: rgba(255,255,255,.22);
+  border: 1px solid rgba(196,154,46,.25);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5), var(--sh-gold);
+  width: 100%;
 }
-.date-block strong { color: var(--gold-dark); font-size: clamp(.95rem,4vw,1.1rem); }
+.date-block strong {
+  color: var(--gold-dark);
+  font-size: clamp(1rem,4.2vw,1.18rem);
+  text-shadow: 0 1px 4px rgba(122,92,16,.15);
+}
 
 /* Countdown */
 .countdown {
-  display: flex; justify-content: center; gap: clamp(5px,1.5vw,10px);
-  margin-bottom: clamp(8px,2vw,14px);
+  display: flex; justify-content: center; gap: clamp(8px,2vw,14px);
+  margin-bottom: clamp(18px,4.5vw,28px);
 }
 .cd-box {
   text-align: center;
-  background: rgba(245,234,214,.9);
-  border: 1px solid rgba(184,137,42,.4);
-  border-radius: 8px;
-  padding: clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);
-  min-width: clamp(52px,13vw,66px);
+  background: linear-gradient(160deg, rgba(255,255,255,.45) 0%, rgba(245,234,214,.80) 100%);
+  border: 1px solid rgba(196,154,46,.45);
+  border-radius: 12px;
+  padding: clamp(10px,2.5vw,16px) clamp(10px,2.5vw,16px);
+  min-width: clamp(56px,14vw,72px);
+  box-shadow: 0 4px 18px rgba(122,92,16,.18), inset 0 1px 0 rgba(255,255,255,.7);
+  backdrop-filter: blur(4px);
 }
-.cd-num { font-size: clamp(1.3rem,5vw,1.7rem); font-weight: 700; color: var(--gold-dark); display: block; line-height: 1.1; }
-.cd-lbl { font-size: clamp(.62rem,2.2vw,.74rem); color: var(--muted); display: block; margin-top: 2px; }
+.cd-num {
+  font-size: clamp(1.5rem,6vw,2rem);
+  font-weight: 700;
+  color: var(--gold-dark);
+  display: block;
+  line-height: 1.0;
+  font-family: 'Scheherazade New', serif;
+  text-shadow: 0 1px 4px rgba(122,92,16,.20);
+}
+.cd-lbl { font-size: clamp(.64rem,2.3vw,.76rem); color: var(--muted); display: block; margin-top: 5px; letter-spacing:.04em; }
 
 /* Timing row */
 .timing {
   display: flex; justify-content: center;
-  border: 1px solid rgba(184,137,42,.35);
-  border-radius: 10px; overflow: hidden;
-  width: 100%; margin-bottom: clamp(8px,2vw,14px);
-  background: rgba(245,234,214,.5);
+  border: 1px solid rgba(196,154,46,.40);
+  border-radius: 14px; overflow: hidden;
+  width: 100%; margin-bottom: clamp(16px,4vw,24px);
+  background: linear-gradient(160deg, rgba(255,255,255,.38) 0%, rgba(245,234,214,.65) 100%);
+  box-shadow: 0 4px 24px rgba(122,92,16,.14), inset 0 1px 0 rgba(255,255,255,.6);
+  backdrop-filter: blur(4px);
 }
+.timing-item { transition: background .25s; }
+.timing-item:active { background: rgba(196,154,46,.10); }
 .timing-item {
   flex: 1; text-align: center;
-  padding: clamp(8px,2vw,13px) clamp(4px,1vw,8px);
+  padding: clamp(12px,3vw,18px) clamp(4px,1vw,8px);
   position: relative;
 }
 .timing-item + .timing-item::before {
@@ -296,37 +370,45 @@ html, body {
 /* Calligraphic blessings */
 .blessings {
   font-family: 'Scheherazade New', serif;
-  font-size: clamp(1.05rem,4.2vw,1.3rem);
+  font-size: clamp(1.08rem,4.4vw,1.35rem);
   color: var(--gold-dark);
   text-align: center;
-  line-height: 1.85;
-  margin-bottom: clamp(2px,.5vw,6px);
+  line-height: 1.95;
+  margin-bottom: clamp(8px,2vw,14px);
   font-style: italic;
+  text-shadow: 0 1px 6px rgba(122,92,16,.12);
 }
 .blessings2 {
   font-family: 'Scheherazade New', serif;
   font-size: clamp(.95rem,3.8vw,1.15rem);
-  color: var(--gold-dark);
+  color: var(--muted);
   text-align: center;
   line-height: 1.85;
   margin-bottom: clamp(12px,3vw,22px);
-  font-style: italic;
-  opacity: .88;
+  opacity: .75;
 }
 
 /* Map button */
 .map-btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: 100%; padding: clamp(11px,2.8vw,14px);
-  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 40%, var(--gold-dark) 100%);
-  color: #fff; border: none; border-radius: 9px;
-  font-family: 'Amiri', serif; font-size: clamp(.92rem,3.8vw,1.05rem);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: clamp(14px,3.5vw,18px);
+  background: var(--gold-grd);
+  background-size: 200% 100%;
+  color: #1a0e02; border: none; border-radius: 14px;
+  font-family: 'Scheherazade New', serif;
+  font-size: clamp(.96rem,4vw,1.1rem);
+  font-weight: 700;
   cursor: pointer; text-decoration: none;
-  box-shadow: 0 4px 18px rgba(122,92,16,.45);
-  transition: opacity .2s, transform .15s;
-  margin-bottom: 4px;
+  box-shadow: 0 6px 28px rgba(122,92,16,.50), 0 2px 6px rgba(122,92,16,.25), inset 0 1px 0 rgba(255,255,255,.35);
+  transition: transform .2s cubic-bezier(.22,1,.36,1), box-shadow .2s, background-position .5s;
+  margin-bottom: clamp(10px,2.5vw,16px);
+  letter-spacing: .04em;
 }
-.map-btn:hover { opacity: .88; transform: translateY(-1px); }
+.map-btn:hover, .map-btn:active {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 10px 36px rgba(122,92,16,.60), 0 3px 8px rgba(122,92,16,.25), inset 0 1px 0 rgba(255,255,255,.35);
+  background-position: 100% 0;
+}
 
 /* sparkle corners */
 .sparkle {
@@ -639,7 +721,72 @@ html, body {
   transition: opacity .5s;
 }
 .env-tap-text.visible { opacity: 1; }
-/* ══ FLOATING MUSIC BUTTON ══ */
+
+/* ══ PREMIUM CARD FOOTER ══ */
+.card-footer {
+  padding: clamp(18px,4vw,28px) clamp(22px,6vw,36px) clamp(28px,7vw,44px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.footer-ornament { opacity: .7; }
+.footer-text {
+  font-family: 'Scheherazade New', serif;
+  font-size: clamp(.82rem,3.2vw,.96rem);
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: .06em;
+  opacity: .65;
+}
+
+/* ══ SHARE BUTTON ══ */
+#shareBtn {
+  position: fixed;
+  bottom: 22px;
+  left: 18px;
+  z-index: 8000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold-dark));
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 14px rgba(122,92,16,.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: transform .18s, box-shadow .18s;
+  -webkit-tap-highlight-color: transparent;
+  color: #fff8e0;
+  font-size: 1.2rem;
+}
+#shareBtn:hover { transform: scale(1.1); box-shadow: 0 5px 20px rgba(122,92,16,.7); }
+
+/* ══ TOAST NOTIFICATION ══ */
+#toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(30,20,5,.92);
+  color: #f0d878;
+  font-family: 'Amiri', serif;
+  font-size: .9rem;
+  padding: 9px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(212,175,90,.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .35s, transform .35s;
+  z-index: 9000;
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ══ PARALLAX HERO ══ */
+#heroImg { will-change: transform; transition: transform .05s linear; }
+
 #musicBtn {
   position: fixed;
   bottom: 22px;
@@ -744,8 +891,12 @@ html, body {
   <!-- الصورة في الخلف -->
   <div class="hero-video-wrap">
     <div class="hero-video-frame">
-      <img id="heroImg" src="hero.jpg" alt="" loading="eager">
+      <img id="heroImg" src="hero.jpg" alt="" loading="eager" draggable="false">
       <div class="hero-video-overlay"></div>
+      <!-- Protection overlay — blocks right-click / long-press / drag on image -->
+      <div class="img-protect-overlay" id="imgProtect"></div>
+      <!-- Invisible watermark -->
+      <div class="img-watermark" aria-hidden="true">وليد &amp; رحمة • ٢٠٢٦</div>
     </div>
   </div>
 
@@ -976,11 +1127,11 @@ html, body {
       لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
     </p>
 
-    <p class="subtitle fi d2">ونتشرف بدعوتكم &nbsp;|&nbsp; عقد قراني</p>
-
     <div class="names fi d3">وليد &amp; رحمة</div>
 
-    <p class="dua fi d3">اللهم اجعله عقداً متيناً وارزقنا التمام الجميل</p>
+    <p class="subtitle fi d3">ونتشرف بدعوتكم &nbsp;|&nbsp; عقد قراني</p>
+
+    <p class="dua fi d4">اللهم اجعله عقداً متيناً وارزقنا التمام الجميل</p>
 
     <div class="divider fi d4"><span class="divider-icon">✦</span></div>
 
@@ -1042,6 +1193,31 @@ html, body {
       <path d="M16 2 L17.5 14 L28 16 L17.5 18 L16 30 L14.5 18 L4 16 L14.5 14 Z" fill="#d4af5a"/>
       <path d="M16 8 L16.7 14 L22 16 L16.7 18 L16 24 L15.3 18 L10 16 L15.3 14 Z" fill="#f0d878"/>
     </svg>
+  </div>
+
+  <!-- Premium Footer -->
+  <div class="card-footer fi d8">
+    <div class="footer-ornament" aria-hidden="true">
+      <svg viewBox="0 0 200 30" xmlns="http://www.w3.org/2000/svg" width="200" height="30">
+        <defs>
+          <linearGradient id="ornGrd" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="transparent"/>
+            <stop offset="25%" stop-color="#c49a2e"/>
+            <stop offset="50%" stop-color="#fae888"/>
+            <stop offset="75%" stop-color="#c49a2e"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="15" x2="200" y2="15" stroke="url(#ornGrd)" stroke-width="1"/>
+        <ellipse cx="100" cy="15" rx="6" ry="6" fill="none" stroke="#c49a2e" stroke-width="1" opacity=".7"/>
+        <ellipse cx="100" cy="15" rx="2.5" ry="2.5" fill="#c49a2e" opacity=".8"/>
+        <ellipse cx="70" cy="15" rx="3" ry="3" fill="none" stroke="#c49a2e" stroke-width=".8" opacity=".5"/>
+        <ellipse cx="130" cy="15" rx="3" ry="3" fill="none" stroke="#c49a2e" stroke-width=".8" opacity=".5"/>
+        <line x1="55" y1="15" x2="64" y2="15" stroke="#c49a2e" stroke-width=".8" opacity=".5"/>
+        <line x1="136" y1="15" x2="145" y2="15" stroke="#c49a2e" stroke-width=".8" opacity=".5"/>
+      </svg>
+    </div>
+    <p class="footer-text">بِسْمِ اللهِ مَجْرَاهَا وَمُرْسَاهَا</p>
   </div>
 
 </div><!-- card -->
@@ -1343,8 +1519,128 @@ tick2(); setInterval(tick2, 1000);
   </svg>
 </button>
 
-<!-- Background music -->
+<!-- Floating share button -->
+<button id="shareBtn" aria-label="مشاركة الدعوة" title="مشاركة الدعوة">🔗</button>
+
+<!-- Toast notification -->
+<div id="toast">تم نسخ الرابط ✓</div>
+
 <audio id="bgMusic" src="song.mp3" loop preload="auto" style="display:none"></audio>
+
+<script>
+/* ══════════════════════════════════════════
+   IMAGE PROTECTION — Block right-click, drag,
+   long-press, and common screenshot shortcuts
+══════════════════════════════════════════ */
+(function() {
+  // Disable right-click globally
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+  });
+
+  // Disable common keyboard shortcuts for screenshots / save
+  document.addEventListener('keydown', function(e) {
+    const k = e.key.toLowerCase();
+    const ctrl = e.ctrlKey || e.metaKey;
+    // Ctrl/Cmd + S (save), Ctrl/Cmd + U (view source), PrintScreen, Ctrl+Shift+I/J/C (devtools)
+    if (ctrl && (k === 's' || k === 'u' || k === 'p')) { e.preventDefault(); return false; }
+    if (k === 'printscreen') { e.preventDefault(); return false; }
+    if (ctrl && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+  });
+
+  // Disable drag on all images
+  document.addEventListener('dragstart', function(e) {
+    if (e.target.tagName === 'IMG') { e.preventDefault(); return false; }
+  });
+
+  // Block long-press image save on mobile (iOS/Android)
+  const protect = document.getElementById('imgProtect');
+  if (protect) {
+    protect.addEventListener('touchstart', function(e) { e.preventDefault(); }, { passive: false });
+    protect.addEventListener('touchend',   function(e) { e.preventDefault(); }, { passive: false });
+    protect.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+  }
+
+  // Also block on the image itself
+  const img = document.getElementById('heroImg');
+  if (img) {
+    img.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    img.addEventListener('touchstart',  function(e) { e.preventDefault(); }, { passive: false });
+    img.addEventListener('dragstart',   function(e) { e.preventDefault(); });
+  }
+})();
+
+/* ══════════════════════════════════════════
+   PARALLAX HERO on scroll
+══════════════════════════════════════════ */
+(function() {
+  const img = document.getElementById('heroImg');
+  if (!img) return;
+  let ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() {
+        const scrollY = window.scrollY || window.pageYOffset;
+        const shift = Math.min(scrollY * 0.3, 60);
+        img.style.transform = `translateY(${shift}px) scale(1.08)`;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+})();
+
+/* ══════════════════════════════════════════
+   SHARE BUTTON
+══════════════════════════════════════════ */
+(function() {
+  const btn   = document.getElementById('shareBtn');
+  const toast = document.getElementById('toast');
+
+  // Show share btn when card is revealed
+  const observer = new MutationObserver(function() {
+    if (document.querySelector('.card.revealed')) {
+      btn.style.display = 'flex';
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2800);
+  }
+
+  btn.addEventListener('click', function() {
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: 'دعوة عقد قران — وليد & رحمة',
+        text: 'يسعدنا مشاركتكم فرحتنا ❤',
+        url: url
+      }).catch(function() {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function() {
+        showToast('تم نسخ الرابط ✓');
+      }).catch(function() {
+        showToast('الرابط: ' + url);
+      });
+    } else {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.opacity  = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      try { document.execCommand('copy'); showToast('تم نسخ الرابط ✓'); } catch(e) {}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
 
 </body>
 </html>
