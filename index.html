@@ -196,7 +196,7 @@ html, body {
 /* ══ CONTENT ══ */
 .content {
   position: relative; z-index: 4;
-  padding: 0 clamp(22px, 6vw, 36px) clamp(32px, 8vw, 52px);
+  padding: 0 clamp(22px, 6vw, 36px) clamp(4px, 1vw, 8px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -385,6 +385,16 @@ html, body {
   text-align: center;
   line-height: 1.85;
   margin-bottom: clamp(12px,3vw,22px);
+  opacity: .75;
+}
+.notice-text {
+  font-family: 'Scheherazade New', serif;
+  font-size: clamp(.8rem,3vw,.92rem);
+  color: var(--muted);
+  text-align: center;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
   opacity: .75;
 }
 
@@ -1126,8 +1136,10 @@ html, body {
       وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا<br>
       لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
     </p>
- <p class="subtitle fi d3">ونتشرف بدعوتكم &nbsp;|&nbsp; عقد قراني</p>
+
     <div class="names fi d3">وليد &amp; رحمة</div>
+
+    <p class="subtitle fi d3">ونتشرف بدعوتكم &nbsp;|&nbsp; عقد قراني</p>
 
     <p class="dua fi d4">اللهم اجعله عقداً متيناً وارزقنا التمام الجميل</p>
 
@@ -1180,9 +1192,8 @@ html, body {
     <a class="map-btn fi d8" href="https://maps.app.goo.gl/nYvg4d4uEySctgK88" target="_blank" rel="noopener">
       📍 الإنتاج الحربي — عرض الموقع على الخريطة
     </a>
- <p class="blessings2 fi d7">وجعل الله بينكم مودةً ورحمةً</p>
- <p class="blessings2 fi d7">🤳📵ملحوظة يمنع التصوير نهائيا داخل القاعة لاي اسباب </p>
-    
+ <p class="blessings2 fi d7" style="margin-bottom:4px;">وجعل الله بينكم مودةً ورحمةً</p>
+ <p class="notice-text fi d7">ملحوظة يمنع التصوير نهائيًا داخل القاعة لأي أسباب</p>
   </div>
 
   <!-- Sparkle corner -->
@@ -1193,30 +1204,6 @@ html, body {
     </svg>
   </div>
 
-  <!-- Premium Footer -->
-  <div class="card-footer fi d8">
-    <div class="footer-ornament" aria-hidden="true">
-      <svg viewBox="0 0 200 30" xmlns="http://www.w3.org/2000/svg" width="200" height="30">
-        <defs>
-          <linearGradient id="ornGrd" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="transparent"/>
-            <stop offset="25%" stop-color="#c49a2e"/>
-            <stop offset="50%" stop-color="#fae888"/>
-            <stop offset="75%" stop-color="#c49a2e"/>
-            <stop offset="100%" stop-color="transparent"/>
-          </linearGradient>
-        </defs>
-        <line x1="0" y1="15" x2="200" y2="15" stroke="url(#ornGrd)" stroke-width="1"/>
-        <ellipse cx="100" cy="15" rx="6" ry="6" fill="none" stroke="#c49a2e" stroke-width="1" opacity=".7"/>
-        <ellipse cx="100" cy="15" rx="2.5" ry="2.5" fill="#c49a2e" opacity=".8"/>
-        <ellipse cx="70" cy="15" rx="3" ry="3" fill="none" stroke="#c49a2e" stroke-width=".8" opacity=".5"/>
-        <ellipse cx="130" cy="15" rx="3" ry="3" fill="none" stroke="#c49a2e" stroke-width=".8" opacity=".5"/>
-        <line x1="55" y1="15" x2="64" y2="15" stroke="#c49a2e" stroke-width=".8" opacity=".5"/>
-        <line x1="136" y1="15" x2="145" y2="15" stroke="#c49a2e" stroke-width=".8" opacity=".5"/>
-      </svg>
-    </div>
-  
-  </div>
 
 </div><!-- card -->
 </div><!-- outer -->
@@ -1372,10 +1359,10 @@ function startIntroCountdown() {
 
   function confettiBurst() {
     const shapes = ['◆','★','✦','◇','●'];
-const colors = ['#d4af5a', '#b8892a', '#e8c870'];
+const colors = ['#ffeb3b', '#ffd700', '#ffe600', '#fff176', '#ffc107'];
     const cx = window.innerWidth / 2;
     const cy = window.innerHeight / 2;
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 300; i++) {
       const el = document.createElement('div');
       el.className = 'confetti';
       const angle = Math.random() * 360;
