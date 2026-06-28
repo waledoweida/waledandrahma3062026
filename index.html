@@ -268,16 +268,28 @@ html, body {
   margin-bottom: clamp(10px,2.5vw,18px);
   margin-top: clamp(4px,1vw,8px);
   padding: 0 4px;
+}
+.names .name-amp {
+  display: inline-block;
+  margin: 0 .18em;
   text-shadow:
     0 1px 0 #fae888,
     0 2px 8px rgba(122,92,16,.40),
     0 4px 20px rgba(122,92,16,.20);
+}
+.names .name-part {
+  display: inline-block;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-  transition: text-shadow .4s ease, filter .4s ease;
+  text-shadow:
+    0 1px 0 #fae888,
+    0 2px 8px rgba(122,92,16,.40),
+    0 4px 20px rgba(122,92,16,.20);
+  transition: text-shadow .4s ease, filter .4s ease, transform .25s ease;
 }
-.names.names-pulse {
+.names .name-part:active { transform: scale(.96); }
+.names .name-part.names-pulse {
   text-shadow:
     0 1px 0 #fff6d0,
     0 0 18px rgba(240,208,106,.95),
@@ -286,7 +298,7 @@ html, body {
   filter: brightness(1.18);
 }
 
-/* ══ NAMES TAP FX — قلوب / نجوم / ورد / شارات ذهبية ══ */
+/* ══ NAMES TAP FX — وليد: قلوب وخاتم / رحمة: فراشات ══ */
 .names-fx {
   position: fixed;
   top: 0; left: 0;
@@ -1388,7 +1400,7 @@ html, body {
       لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
     </p>
     <p class="subtitle fi d3">ونتشرف بدعوتكم &nbsp;|&nbsp; عقد قراني</p>
-    <div class="names fi d3">وليد &amp; رحمة</div>
+    <div class="names fi d3"><span class="name-part" id="nameWaleed">وليد</span><span class="name-amp">&amp;</span><span class="name-part" id="nameRahma">رحمة</span></div>
 
     <p class="dua fi d4">اللهم اجعله عقداً متيناً وارزقنا التمام الجميل</p>
 
@@ -1905,19 +1917,18 @@ tick2(); setInterval(tick2, 1000);
 
 <script>
 /* ══════════════════════════════════════════
-   NAMES TAP FX — اضغط على "وليد & رحمة"
-   فتتطاير قلوب 💕 ونجوم ⭐ وورد أحمر 🌹 وشارات ذهبية 🏅
+   NAMES TAP FX — اضغط على كل اسم لوحده
+   وليد → قلوب 💕 وخاتم 💍   |   رحمة → فراشات 🦋
 ══════════════════════════════════════════ */
 (function() {
-  const namesEl = document.querySelector('.names');
-  if (!namesEl) return;
+  // أيقونات كل اسم على حدة
+  const WALEED_ICONS = ['❤️','💖','💕','💘','💍'];
+  const RAHMA_ICONS  = ['🦋'];
 
-  const ICONS = ['❤️','💖','🦋','⭐','✨','🌟','🌹','💍','🦋'];
-
-  function spawnIcon(cx, cy) {
+  function spawnIcon(icons, cx, cy) {
     const el = document.createElement('span');
     el.className = 'names-fx';
-    el.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
+    el.textContent = icons[Math.floor(Math.random() * icons.length)];
 
     const angle = Math.random() * 360;
     const dist  = 55 + Math.random() * 170;
@@ -1936,38 +1947,50 @@ tick2(); setInterval(tick2, 1000);
     setTimeout(() => el.remove(), (dur + del) * 1000 + 150);
   }
 
-  function burstNamesFx() {
-    const rect = namesEl.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
+  function makeBurst(targetEl, icons, chimeFreqs) {
+    return function burst() {
+      const rect = targetEl.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
 
-    for (let i = 0; i < 26; i++) {
-      spawnIcon(
-        cx + (Math.random() - 0.5) * rect.width * 0.6,
-        cy + (Math.random() - 0.5) * rect.height * 0.5
-      );
-    }
-
-    // توهج لطيف على الاسم نفسه
-    namesEl.classList.remove('names-pulse');
-    void namesEl.offsetWidth; // إعادة تشغيل التأثير لو ضغط المستخدم بسرعة
-    namesEl.classList.add('names-pulse');
-    setTimeout(() => namesEl.classList.remove('names-pulse'), 650);
-
-    // نغمة هادئة (تستخدم نفس محرك الصوت الموجود في الصفحة)
-    try {
-      if (typeof playChime === 'function') {
-        [784, 988, 1318].forEach((f, i) => setTimeout(() => playChime(f, .22, .45), i * 90));
+      for (let i = 0; i < 22; i++) {
+        spawnIcon(
+          icons,
+          cx + (Math.random() - 0.5) * rect.width * 0.7,
+          cy + (Math.random() - 0.5) * rect.height * 0.5
+        );
       }
-    } catch (e) {}
+
+      // توهج لطيف على الاسم نفسه فقط
+      targetEl.classList.remove('names-pulse');
+      void targetEl.offsetWidth; // إعادة تشغيل التأثير لو ضغط المستخدم بسرعة
+      targetEl.classList.add('names-pulse');
+      setTimeout(() => targetEl.classList.remove('names-pulse'), 650);
+
+      // نغمة هادئة (تستخدم نفس محرك الصوت الموجود في الصفحة)
+      try {
+        if (typeof playChime === 'function') {
+          chimeFreqs.forEach((f, i) => setTimeout(() => playChime(f, .22, .45), i * 90));
+        }
+      } catch (e) {}
+    };
   }
 
-  namesEl.addEventListener('click', burstNamesFx);
-  namesEl.addEventListener('touchend', function(e) {
-    // منع تكرار التشغيل مرتين (click + touchend) مع السماح بالتفاعل اللمسي السريع
-    e.preventDefault();
-    burstNamesFx();
-  }, { passive: false });
+  function bindNameTap(el, burst) {
+    if (!el) return;
+    el.addEventListener('click', burst);
+    el.addEventListener('touchend', function(e) {
+      // منع تكرار التشغيل مرتين (click + touchend) مع السماح بالتفاعل اللمسي السريع
+      e.preventDefault();
+      burst();
+    }, { passive: false });
+  }
+
+  const waleedEl = document.getElementById('nameWaleed');
+  const rahmaEl  = document.getElementById('nameRahma');
+
+  bindNameTap(waleedEl, makeBurst(waleedEl, WALEED_ICONS, [784, 988, 1318]));
+  bindNameTap(rahmaEl,  makeBurst(rahmaEl,  RAHMA_ICONS,  [880, 1108, 1480]));
 })();
 </script>
 
