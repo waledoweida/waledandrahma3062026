@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>عقد قراني | وليد & رحمة</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Scheherazade+New:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <meta property="og:title" content="عقد قران وليد & رحمة">
 <meta property="og:description" content="يسعدنا مشاركتكم فرحتنا، افتح الرابط لمعرفة التفاصيل والمكان ❤">
 <meta property="og:image" content="https://waled-rahma.online/aaass.jpg?v=3">
@@ -271,6 +272,34 @@ html, body {
     0 1px 0 #fae888,
     0 2px 8px rgba(122,92,16,.40),
     0 4px 20px rgba(122,92,16,.20);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: text-shadow .4s ease, filter .4s ease;
+}
+.names.names-pulse {
+  text-shadow:
+    0 1px 0 #fff6d0,
+    0 0 18px rgba(240,208,106,.95),
+    0 0 36px rgba(212,80,90,.55),
+    0 0 60px rgba(196,154,46,.45);
+  filter: brightness(1.18);
+}
+
+/* ══ NAMES TAP FX — قلوب / نجوم / ورد / شارات ذهبية ══ */
+.names-fx {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,.25));
+  animation: namesFxFly var(--ndur) var(--ndel) cubic-bezier(.16,.84,.44,1) forwards;
+}
+@keyframes namesFxFly {
+  0%   { opacity: 0; transform: translate(-50%,-50%) scale(.2) rotate(0deg); }
+  14%  { opacity: 1; transform: translate(-50%,-50%) scale(1.15) rotate(calc(var(--nrot) * .12)); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--ntx)), calc(-50% + var(--nty))) scale(.55) rotate(var(--nrot)); }
 }
 
 .dua {
@@ -418,6 +447,228 @@ html, body {
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 10px 36px rgba(122,92,16,.60), 0 3px 8px rgba(122,92,16,.25), inset 0 1px 0 rgba(255,255,255,.35);
   background-position: 100% 0;
+}
+
+/* ══════════════════════════════════════════
+   INTERACTIVE VENUE MAP — قسم موقع الحفل
+══════════════════════════════════════════ */
+.map-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(14px,3.5vw,20px);
+}
+
+.map-heading {
+  display: flex; align-items: center; gap: 9px;
+  font-family: 'Scheherazade New', serif;
+  font-weight: 700;
+  font-size: clamp(1rem,4vw,1.18rem);
+  color: var(--gold-dark);
+  margin-bottom: clamp(10px,2.5vw,16px);
+  text-shadow: 0 1px 4px rgba(122,92,16,.18);
+}
+.map-heading-icon { font-size: 1.05em; filter: drop-shadow(0 1px 3px rgba(122,92,16,.3)); }
+.map-heading::before, .map-heading::after {
+  content: '';
+  width: clamp(26px,7vw,42px); height: 1px;
+  background: linear-gradient(to var(--dir,right), transparent, var(--gold-light) 50%, transparent);
+}
+
+/* الإطار الذهبي */
+.map-frame {
+  position: relative;
+  width: 100%;
+  height: clamp(115px, 30vw, 150px);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--cream2) 0%, var(--cream3) 100%);
+  box-shadow:
+    0 0 0 1px rgba(196,154,46,.35),
+    0 0 0 6px rgba(248,237,218,.55),
+    0 0 0 7px rgba(196,154,46,.30),
+    0 14px 38px rgba(74,53,8,.30);
+  animation: mapFrameGlow 4.5s ease-in-out infinite;
+}
+@keyframes mapFrameGlow {
+  0%,100% { box-shadow: 0 0 0 1px rgba(196,154,46,.35), 0 0 0 6px rgba(248,237,218,.55), 0 0 0 7px rgba(196,154,46,.30), 0 14px 38px rgba(74,53,8,.30); }
+  50%     { box-shadow: 0 0 0 1px rgba(240,208,106,.55), 0 0 0 6px rgba(248,237,218,.65), 0 0 0 7px rgba(212,168,60,.45), 0 14px 42px rgba(122,92,16,.36); }
+}
+
+/* زوايا ذهبية مزخرفة بأسلوب البراويز */
+.map-corner {
+  position: absolute;
+  width: clamp(16px,5.5vw,24px); height: clamp(16px,5.5vw,24px);
+  z-index: 6; pointer-events: none;
+  border: 2px solid var(--gold-bright);
+  opacity: .9;
+  filter: drop-shadow(0 1px 3px rgba(122,92,16,.35));
+}
+.map-corner.tl { top: 6px; left: 6px; border-width: 2px 0 0 2px; border-radius: 6px 0 0 0; }
+.map-corner.tr { top: 6px; right: 6px; border-width: 2px 2px 0 0; border-radius: 0 6px 0 0; }
+.map-corner.bl { bottom: 6px; left: 6px; border-width: 0 0 2px 2px; border-radius: 0 0 0 6px; }
+.map-corner.br { bottom: 6px; right: 6px; border-width: 0 2px 2px 0; border-radius: 0 0 6px 0; }
+
+.venue-map {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--cream2);
+}
+/* تنغيم خرائط CartoDB لتتماشى مع الطابع الذهبي/الكريمي */
+.venue-map .leaflet-tile-pane {
+  filter: sepia(.45) saturate(1.45) hue-rotate(-9deg) brightness(1.07) contrast(.94);
+}
+.venue-map .leaflet-control-attribution {
+  background: rgba(248,237,218,.75) !important;
+  color: var(--muted) !important;
+  font-size: 8px !important;
+  opacity: .65;
+}
+.venue-map .leaflet-control-attribution a { color: var(--gold-dark) !important; }
+
+/* أزرار التكبير/التصغير بالطابع الذهبي */
+.venue-map .leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 3px 14px rgba(74,53,8,.30) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+.venue-map .leaflet-control-zoom a {
+  background: linear-gradient(160deg, var(--gold-shine) 0%, var(--gold) 60%, var(--gold-dark) 100%) !important;
+  color: #2a1c04 !important;
+  font-weight: 700;
+  border: none !important;
+  width: 24px !important; height: 24px !important; line-height: 24px !important;
+  font-size: 13px !important;
+}
+.venue-map .leaflet-control-zoom a:hover { filter: brightness(1.12); }
+.venue-map .leaflet-control-zoom-in { border-radius: 10px 10px 0 0 !important; }
+.venue-map .leaflet-control-zoom-out { border-radius: 0 0 10px 10px !important; }
+.venue-map .leaflet-bar { border: none !important; }
+
+/* تظليل بسيط على حواف الخريطة لدمجها بالكارت */
+.map-vignette {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  background: radial-gradient(ellipse 85% 75% at 50% 50%, transparent 55%, rgba(26,16,5,.20) 100%);
+}
+
+/* شاشة تحميل أنيقة */
+.map-loading {
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px;
+  background: linear-gradient(160deg, var(--cream2) 0%, var(--cream3) 100%);
+  color: var(--gold-dark);
+  font-family: 'Scheherazade New', serif;
+  font-size: .85rem;
+  transition: opacity .5s ease;
+}
+.map-loading-spinner {
+  width: 26px; height: 26px;
+  border: 3px solid rgba(196,154,46,.30);
+  border-top-color: var(--gold-dark);
+  border-radius: 50%;
+  animation: mapSpin .85s linear infinite;
+}
+@keyframes mapSpin { to { transform: rotate(360deg); } }
+.map-loading.fade-out { opacity: 0; }
+
+/* العلامة النابضة على الخريطة */
+.venue-marker { position: relative; width: 40px; height: 40px; }
+.vm-ring {
+  position: absolute; left: 50%; bottom: 6px;
+  width: 14px; height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: rgba(240,208,106,.55);
+  animation: vmPulse 2.2s ease-out infinite;
+}
+.vm-ring2 { animation-delay: 1.1s; }
+@keyframes vmPulse {
+  0%   { transform: scale(1);   opacity: .65; }
+  100% { transform: scale(3.4); opacity: 0; }
+}
+.vm-pin {
+  position: absolute; left: 50%; bottom: 2px;
+  transform: translateX(-50%);
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  border-radius: 50% 50% 50% 0;
+  transform: translateX(-50%) rotate(-45deg);
+  background: linear-gradient(160deg, var(--gold-shine) 0%, var(--gold) 55%, var(--gold-dark) 100%);
+  box-shadow: 0 3px 10px rgba(74,53,8,.45), inset 0 1px 0 rgba(255,255,255,.5);
+  border: 1.5px solid rgba(255,255,255,.5);
+}
+.vm-pin span { transform: rotate(45deg); display:block; }
+
+/* النافذة المنبثقة */
+.venue-popup .leaflet-popup-content-wrapper {
+  background: linear-gradient(160deg, var(--cream) 0%, var(--cream2) 100%);
+  border: 1px solid rgba(196,154,46,.45);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(74,53,8,.30);
+}
+.venue-popup .leaflet-popup-tip {
+  background: var(--cream2);
+  border: 1px solid rgba(196,154,46,.45);
+}
+.venue-popup .leaflet-popup-content { margin: 12px 14px; }
+.vm-popup { text-align: center; font-family: 'Amiri', serif; }
+.vm-popup strong {
+  display: block; font-family: 'Scheherazade New', serif;
+  font-size: 1.05rem; color: var(--gold-dark); margin-bottom: 4px;
+}
+.vm-popup span { display: block; font-size: .78rem; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+.vm-popup a {
+  display: inline-block; font-size: .76rem; font-weight: 700;
+  color: #2a1c04; text-decoration: none;
+  background: var(--gold-grd); padding: 6px 14px; border-radius: 20px;
+  box-shadow: 0 3px 10px rgba(122,92,16,.35);
+}
+
+.map-caption {
+  font-size: clamp(.74rem,2.8vw,.84rem);
+  color: var(--muted);
+  text-align: center;
+  margin-top: clamp(10px,2.5vw,14px);
+  margin-bottom: clamp(10px,2.5vw,14px);
+  opacity: .85;
+  letter-spacing: .02em;
+}
+
+.map-actions {
+  display: flex; gap: 10px; width: 100%;
+  margin-bottom: clamp(10px,2.5vw,16px);
+}
+.map-action-btn {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: clamp(11px,2.8vw,14px) 8px;
+  border-radius: 12px;
+  font-family: 'Scheherazade New', serif;
+  font-size: clamp(.82rem,3.4vw,.94rem);
+  font-weight: 700;
+  cursor: pointer; text-decoration: none; border: none;
+  transition: transform .2s cubic-bezier(.22,1,.36,1), box-shadow .2s, filter .2s;
+}
+.map-action-btn.primary {
+  background: var(--gold-grd);
+  background-size: 200% 100%;
+  color: #1a0e02;
+  box-shadow: 0 5px 20px rgba(122,92,16,.42), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.map-action-btn:not(.primary) {
+  background: rgba(255,255,255,.30);
+  color: var(--gold-dark);
+  border: 1.4px solid rgba(196,154,46,.45);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
+}
+.map-action-btn:hover, .map-action-btn:active {
+  transform: translateY(-2px) scale(1.01);
+  filter: brightness(1.05);
 }
 
 /* sparkle corners */
@@ -1185,11 +1436,37 @@ html, body {
 </div>
 
     <p class="blessings fi d7">✨وبحضوركم يتم لنا الفرح والسرور✨</p>
-   
 
-    <a class="map-btn fi d8" href="https://maps.app.goo.gl/nYvg4d4uEySctgK88" target="_blank" rel="noopener">
-      📍 الإنتاج الحربي — عرض الموقع على الخريطة
-    </a>
+    <!-- ══ INTERACTIVE VENUE MAP ══ -->
+    <div class="map-section fi d8">
+      <div class="map-heading">
+        <span class="map-heading-icon">📍</span>
+        <span>موقع عقد القران</span>
+      </div>
+
+      <div class="map-frame" id="venueMapFrame">
+        <div class="map-corner tl" aria-hidden="true"></div>
+        <div class="map-corner tr" aria-hidden="true"></div>
+        <div class="map-corner bl" aria-hidden="true"></div>
+        <div class="map-corner br" aria-hidden="true"></div>
+
+        <div id="venueMap" class="venue-map" role="img" aria-label="خريطة موقع قاعة لامور، نادي الإنتاج الحربي، كورنيش حلوان"></div>
+        <div class="map-vignette" aria-hidden="true"></div>
+
+        <div class="map-loading" id="mapLoading">
+          <div class="map-loading-spinner"></div>
+          <span>جاري تحميل الخريطة…</span>
+        </div>
+      </div>
+
+      <p class="map-caption">قاعة لامور &nbsp;·&nbsp; نادي الإنتاج الحربي، كورنيش حلوان</p>
+
+      <div class="map-actions">
+        <a class="map-action-btn primary" href="https://maps.app.goo.gl/nYvg4d4uEySctgK88" target="_blank" rel="noopener">🧭 فتح الاتجاهات</a>
+        <button class="map-action-btn" id="copyAddressBtn" type="button">📋 نسخ العنوان</button>
+      </div>
+    </div>
+
      <p class="notice-text fi d7">ملحوظة يمنع التصوير نهائيًا داخل القاعة لأي أسباب🤳📵</p>
  <p class="blessings2 fi d7" style="margin-bottom:4px;">وجعل الله بينكم مودةً ورحمةً</p>
 
@@ -1623,6 +1900,201 @@ tick2(); setInterval(tick2, 1000);
       document.body.removeChild(ta);
     }
   });
+})();
+</script>
+
+<script>
+/* ══════════════════════════════════════════
+   NAMES TAP FX — اضغط على "وليد & رحمة"
+   فتتطاير قلوب 💕 ونجوم ⭐ وورد أحمر 🌹 وشارات ذهبية 🏅
+══════════════════════════════════════════ */
+(function() {
+  const namesEl = document.querySelector('.names');
+  if (!namesEl) return;
+
+  const ICONS = ['❤️','💖','💕','⭐','✨','🌟','🌹','🏅','🎖️'];
+
+  function spawnIcon(cx, cy) {
+    const el = document.createElement('span');
+    el.className = 'names-fx';
+    el.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
+
+    const angle = Math.random() * 360;
+    const dist  = 55 + Math.random() * 170;
+    const tx    = Math.cos(angle * Math.PI / 180) * dist;
+    const ty    = Math.sin(angle * Math.PI / 180) * dist - 30; // ميل بسيط للأعلى
+    const size  = 16 + Math.random() * 18;
+    const dur   = 0.9 + Math.random() * 0.7;
+    const del   = Math.random() * 0.25;
+    const rot   = -200 + Math.random() * 400;
+
+    el.style.cssText =
+      `left:${cx}px;top:${cy}px;font-size:${size}px;` +
+      `--ntx:${tx}px;--nty:${ty}px;--nrot:${rot}deg;--ndur:${dur}s;--ndel:${del}s;`;
+
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), (dur + del) * 1000 + 150);
+  }
+
+  function burstNamesFx() {
+    const rect = namesEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 26; i++) {
+      spawnIcon(
+        cx + (Math.random() - 0.5) * rect.width * 0.6,
+        cy + (Math.random() - 0.5) * rect.height * 0.5
+      );
+    }
+
+    // توهج لطيف على الاسم نفسه
+    namesEl.classList.remove('names-pulse');
+    void namesEl.offsetWidth; // إعادة تشغيل التأثير لو ضغط المستخدم بسرعة
+    namesEl.classList.add('names-pulse');
+    setTimeout(() => namesEl.classList.remove('names-pulse'), 650);
+
+    // نغمة هادئة (تستخدم نفس محرك الصوت الموجود في الصفحة)
+    try {
+      if (typeof playChime === 'function') {
+        [784, 988, 1318].forEach((f, i) => setTimeout(() => playChime(f, .22, .45), i * 90));
+      }
+    } catch (e) {}
+  }
+
+  namesEl.addEventListener('click', burstNamesFx);
+  namesEl.addEventListener('touchend', function(e) {
+    // منع تكرار التشغيل مرتين (click + touchend) مع السماح بالتفاعل اللمسي السريع
+    e.preventDefault();
+    burstNamesFx();
+  }, { passive: false });
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ══════════════════════════════════════════
+   INTERACTIVE VENUE MAP — قاعة لامور
+   نادي الإنتاج الحربي، كورنيش حلوان
+══════════════════════════════════════════ */
+(function() {
+  const VENUE_LATLNG   = [29.849444, 31.294167];
+  const DIRECTIONS_URL = 'https://maps.app.goo.gl/nYvg4d4uEySctgK88';
+  const VENUE_ADDRESS  = 'قاعة لامور - نادي الإنتاج الحربي، كورنيش حلوان، القاهرة';
+
+  let inited = false;
+
+  function fadeOutLoading() {
+    const loadingEl = document.getElementById('mapLoading');
+    if (!loadingEl) return;
+    loadingEl.classList.add('fade-out');
+    setTimeout(() => loadingEl.remove(), 550);
+  }
+
+  function initVenueMap() {
+    if (inited) return;
+    const mapDiv = document.getElementById('venueMap');
+    if (!mapDiv || typeof L === 'undefined') {
+      // Leaflet لسه مش جاهز — حاول تاني بعد لحظة
+      setTimeout(initVenueMap, 300);
+      return;
+    }
+    inited = true;
+
+    let map;
+    try {
+      map = L.map('venueMap', {
+        center: VENUE_LATLNG,
+        zoom: 12,
+        zoomControl: true,
+        scrollWheelZoom: false,
+        attributionControl: true,
+        dragging: true,
+        tap: true,
+        fadeAnimation: true
+      });
+    } catch (e) { fadeOutLoading(); return; }
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd',
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(map);
+
+    const icon = L.divIcon({
+      className: 'venue-marker',
+      html: '<span class="vm-ring"></span><span class="vm-ring vm-ring2"></span><span class="vm-pin"><span>💛</span></span>',
+      iconSize: [40, 40],
+      iconAnchor: [20, 34],
+      popupAnchor: [0, -32]
+    });
+
+    const marker = L.marker(VENUE_LATLNG, { icon: icon, alt: 'قاعة لامور' }).addTo(map);
+    marker.bindPopup(
+      '<div class="vm-popup">' +
+        '<strong>قاعة لامور 💛</strong>' +
+        '<span>نادي الإنتاج الحربي<br>كورنيش حلوان</span>' +
+        '<a href="' + DIRECTIONS_URL + '" target="_blank" rel="noopener">فتح في خرائط جوجل ↗</a>' +
+      '</div>',
+      { className: 'venue-popup', closeButton: true }
+    );
+
+    map.whenReady(function() {
+      fadeOutLoading();
+      setTimeout(function() {
+        map.invalidateSize();
+        map.flyTo(VENUE_LATLNG, 16, { duration: 1.7, easeLinearity: .25 });
+        setTimeout(function() { marker.openPopup(); }, 1750);
+      }, 200);
+    });
+
+    marker.on('click', function() { marker.openPopup(); });
+  }
+
+  // تحميل الخريطة فقط عند اقترابها من الشاشة (أداء أفضل)
+  const frame = document.getElementById('venueMapFrame');
+  if (frame && 'IntersectionObserver' in window) {
+    const obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          initVenueMap();
+          obs.disconnect();
+        }
+      });
+    }, { rootMargin: '250px 0px' });
+    obs.observe(frame);
+  } else {
+    // متصفح قديم بدون IntersectionObserver
+    setTimeout(initVenueMap, 1000);
+  }
+
+  // زر نسخ العنوان
+  const copyBtn = document.getElementById('copyAddressBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function() {
+      function showCopyToast(msg) {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function() { toast.classList.remove('show'); }, 2800);
+      }
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(VENUE_ADDRESS)
+          .then(function() { showCopyToast('تم نسخ العنوان ✓'); })
+          .catch(function() { showCopyToast('العنوان: ' + VENUE_ADDRESS); });
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = VENUE_ADDRESS;
+        ta.style.position = 'fixed';
+        ta.style.opacity  = '0';
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        try { document.execCommand('copy'); showCopyToast('تم نسخ العنوان ✓'); } catch(e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  }
 })();
 </script>
 
